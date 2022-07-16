@@ -1,0 +1,58 @@
+every 1 second:
+	loop all players:
+		send action bar "Obrona przed kaflem: %{obrona::quidditch::%loop-player%}%%%" to loop-player
+		if {obrona::quidditch::%loop-player%} > 100:
+			set {obrona::quidditch::%loop-player%} to 100
+		if difference between {obrona-timer::quidditch::%loop-player%} and now is more than 5 seconds:
+			if {syf::quidditch::%loop-player%} is true:
+				add 25 to {obrona::quidditch::%loop-player%}
+				delete {syf::quidditch::%loop-player%}
+		if difference between {obrona-timer::quidditch::%loop-player%} and now is more than 20 seconds:
+			delete {obrona-timer::quidditch::%loop-player%}
+
+on rightclick on sign:
+	if line 1 of event-block is "[Quidditch]":
+		if line 3 of event-block is "Pałkarz":
+			if {pozycja::%player%} is set:
+				send "&9[!] &7Wygląda na to, że masz już pozycję. Aby wybrać nową, musisz wyjść z meczu!" to player
+				stop
+			loop all items in player's inventory:
+				add loop-item to {eq::%player%::*}
+			set {pozycja::%player%} to "pałkarz"
+			send "&9[!] &7Zapisane przedmioty:" to player
+			send "%{eq::%player%::*}%" to player
+			clear player's inventory
+			give 1 bone named "&lPałka do quidditcha" to player
+			give 1 red stained glass pane named "&cGroźna Vildan" with lore "Kliknij prawym, aby chwilowo zwiększyć swoją obronę przed utratą kafla!" to player
+			set {obrona::quidditch::%player%} to 100
+			stop
+	if line 1 of event-block is "[Quidditch]":
+		if line 3 of event-block is "Wyjdź":
+			if {pozycja::%player%} is set:
+				clear player's inventory
+				give {eq::%player%::*} to player
+				delete {eq::%player%::*}
+				delete {pozycja::%player%}
+				send "&9[!] &7Pomyślnie przywrócono przedmioty!" to player
+				stop
+			if {pozycja::%player%} is not set:
+				send "&9[!] &7Obecnie nie zajmujesz żadnej pozycji." to player
+				stop
+
+on drop:
+	if event-item is bone:
+		if name of event-item is "&lPałka do quidditcha":
+			cancel event
+	if event-item is red stained glass pane:
+		if name of event-item is "&cGroźna Vildan":
+			cancel event
+
+on rightclick with red stained glass pane:
+	if name of event-item is "&cGroźna Vildan":
+		if {obrona-timer::quidditch::%player%} is set:
+			send "&9[!] &7Musisz odczekać 20 sekund przed ponownym użyciem..." to player
+			stop
+		if {obrona-timer::quidditch::%player%} is not set:
+			remove 25 from {obrona::quidditch::%player%}
+			set {obrona-timer::quidditch::%player%} to now
+			set {syf::quidditch::%player%} to true
