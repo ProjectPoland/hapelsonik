@@ -1,0 +1,54 @@
+on place of cauldron:
+	set {_kociolek} to name of player's tool
+	if {_kociolek} is "&eKociołek cynowy":
+		send "&9[!] &7Pomyślnie postawiono &eKociołek cynowy&7." to player
+		set {kociolek::%location of event-block%} to "cynowy"
+	if {_kociolek} is "&eKociołek żelazny":
+		send "&9[!] &7Pomyślnie postawiono &eKociołek żelazny&7." to player
+		set {kociolek::%location of event-block%} to "żelazny"
+	if {_kociolek} is "&eKociołek miedziany":
+		send "&9[!] &7Pomyślnie postawiono &eKociołek miedziany&7." to player
+		set {kociolek::%location of event-block%} to "miedziany"
+	if {_kociolek} is "&eKociołek srebrny":
+		send "&9[!] &7Pomyślnie postawiono &eKociołek srebrny&7." to player
+		set {kociolek::%location of event-block%} to "srebrny"
+	if {_kociolek} is "&eKociołek złoty":
+		send "&9[!] &7Pomyślnie postawiono &eKociołek złoty7." to player
+		set {kociolek::%location of event-block%} to "złoty"
+
+on rightclick on cauldron:
+	if player's tool is water bucket:
+		cancel event
+	else:
+		if {kociolek::%location of event-block%} is "cynowy":
+			set {_inventory} to chest with 5 rows named "&eKociołek cynowy"
+		if {kociolek::%location of event-block%} is "żelazny":
+			set {_inventory} to chest with 5 rows named "&eKociołek żelazny"
+		if {kociolek::%location of event-block%} is "miedziany":
+			set {_inventory} to chest with 5 rows named "&eKociołek miedziany"
+		if {kociolek::%location of event-block%} is "srebrny":
+			set {_inventory} to chest with 5 rows named "&eKociołek srebrny"
+		if {kociolek::%location of event-block%} is "złoty":
+			set {_inventory} to chest with 5 rows named "&eKociołek złoty"
+		if {stan::%location of event-block%} is not set:
+			set slot 20 of {_inventory} to red stained glass pane named "Stwórz eliksir"
+			set slot 21 of {_inventory} to yellow stained glass pane named "Załaduj eliksir"
+			set slot 22 of {_inventory} to light blue stained glass pane named "Etykieter"
+			set slot 23 of {_inventory} to orange stained glass pane named "Inokreacja"
+
+on inventory click:
+	if name of player's current inventory is "&eKociołek cynowy" or "&eKociołek żelazny" or "&eKociołek miedziany" or "&eKociołek srebrny" or "&eKociołek złoty":
+		cancel event
+		if event-slot is red stained glass pane:
+			set {_nazwa} to name of event-slot
+			if {_nazwa} is "Stwórz eliksir":
+				close player's inventory
+
+command /usunall:
+	trigger:
+		delete {kociolek::*}
+		delete {stan::*}
+
+command /zmienna:
+	trigger:
+		send "%{eliksir.%player%}%"
