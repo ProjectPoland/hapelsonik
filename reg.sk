@@ -1,0 +1,54 @@
+on entering of region "dormitorium_dziewczyny":
+	if {plec::%player%} is not set:
+		cancel event
+		send "&c[!] &7Ustaw &c/plec &7swojej postaci." to player
+	if {plec::%player%} is "mezczyzna":
+		cancel event
+		send "&c[!] &7Chłopcy nie mają wstępu do łazienki/dormitorium dziewczyn." to player
+
+on entering of region "dormitorium_chlopaki":
+	if {plec::%player%} is not set:
+		cancel event
+		send "&c[!] &7Ustaw &c/plec &7swojej postaci." to player
+	if {plec::%player%} is "kobieta":
+		cancel event
+		send "&c[!] &7Dziewczyny nie mają wstępu do łazienki/dormitorium dziewczyn." to player
+
+command /plec [<text>]:
+	description: Komenda do ustawiania płci.
+	trigger:
+		if arg 1 is not set:
+			send "&9[!] &7/plec <kobieta/mezczyzna>" to player
+		if arg 1 is "kobieta":
+			if {plec::%player%} is set:
+				send "&c[!] Masz już ustawioną płeć. W przypadku problemów skontaktuj się z moderacją." to player
+			else:
+				send "&9[!] &7Pomyślnie ustawiono płeć postaci." to player
+				set {plec::%player%} to "kobieta"
+		if arg 1 is "mezczyzna":
+			if {plec::%player%} is set:
+				send "&c[!] Masz już ustawioną płeć. W przypadku problemów skontaktuj się z moderacją." to player
+			else:
+				send "&9[!] &7Pomyślnie ustawiono płeć postaci." to player
+				set {plec::%player%} to "mezczyzna"
+
+command /plec-adm [<text>] [<player>] [<text>]:
+	description: Komenda dla moderatorów do sprawdzania i moderowania płci.
+	permission: moderator.sk
+	permission message: &c[!] Brak permisji.
+	trigger:
+		if arg 1 is not set:
+			send "Poprawne użycie: /plec-adm <ustaw/sprawdz> <nick> <kobieta/mezczyzna>" to player
+		if arg 1 is "sprawdz":
+			if arg 2 is set:
+				send "&9[!] &7Płeć gracza %arg 2%: %{plec::%arg 2%}%" to player
+		if arg 1 is "ustaw":
+			if arg 2 is set:
+				if arg 3 is "kobieta":
+					set {plec::%arg 2%} to "kobieta"
+					send "&9[!] &7Ustawiono płeć graczowi %arg 2% na &7&lKobieta&7." to player
+					send "&9[!] &7%player% ustawił płeć Twojej postaci na &7&lKobieta&7." to arg 2
+				if arg 3 is "mezczyzna":
+					set {plec::%arg 2%} to "mezczyzna"
+					send "&9[!] &7Ustawiono płeć graczowi %arg 2% na &7&lMężczyzna&7." to player
+					send "&9[!] &7%player% ustawił płeć Twojej postaci na &7&lMężczyzna&7." to arg 2
