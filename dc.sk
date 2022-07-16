@@ -1,0 +1,106 @@
+on Skript start:
+	wait 100 seconds
+	post message "Serwer włączony :white_check_mark:" to text channel with id "953373580912103545"
+
+define new bot named "Bocik":
+    token: 
+    intents: default intents
+    policy: all
+    auto reconnect: true
+    compression: none
+	
+on chat:
+	replace all "@everyone" with "everyone" in the message
+	replace all "@here" with "here" in the message
+	post message "**%player%:** %message%" to channel with id "953373580912103545"
+
+discord command say [<text>]:
+    prefixes: ?
+    trigger:
+        broadcast "&7&l[&9&lDC&7&l] &l%event-member%&f: %arg 1%"
+
+on command:
+	if command is "msg" or "m" or "whisper" or "pm":
+		post message "**%player%:** /%command% %arguments%" to channel with id "953373580912103545"
+
+command /namiar [<text>] [<text>]:
+    description: Komenda do zgłaszania namiaru.
+    trigger:
+        if arg 1 is not set:
+            send "&9[!] &7Uwaga! Używaj poniższej komendy tylko w celu użycia namiaru."
+            send "&7/namiar <czy użyto w pobliżu mugola - tak/nie> <nazwa zaklęcia>"
+            send "&9[!] &7Więcej informacji tutaj: &fhttps://pastebin.com/m0pnJrgE"
+        if arg 1 is "tak" or "nie":
+            if arg 2 is not set:
+                send "&9[!] &7Podaj nazwę zaklęcia!"
+            else:
+                set {_x} to x-coordinate of player
+                set {_y} to y-coordinate of player
+                set {_z} to z-coordinate of player
+                send "&9[!] &7Wysłano zawiadomienie o rzuceniu zaklęcia!"
+                make embed:
+                    set title of embed to "Namiar"
+                    set embed color of the embed to purple
+                    set description of embed to "W pobliżu gracza **%player%** użyto zaklęcia **%arg 2%** na koordynatach **x:%{_x}%, y:%{_y}%, z:%{_z}%** Czy mugol widział zaklęcie? **%arg 1%**"
+                post last created embed to text channel with id "953373580912103545"
+
+#command /link [<text>]:
+	#trigger:
+		#if {link::%player%} is set:
+			#send "&9[!] &7Twoje konto jest już połączone! Użyj komendy /unlink, aby je odłączyć."
+		#else:
+			#set {_kod} to random number between 100000 to 999999
+			#set {kod::%{_kod}%} to "%player%"
+			#send "&9[!] &7Wygenerowano kod &c&l%{_kod}% - Użyj komendy ?link <kod> w wiadomości prywatnej do bota @Bocik##7423"
+
+#command /unlink [<text>]:
+	#trigger:
+		#if {link::%player%} is not set:
+			#send "&9[!] &7Nie masz połączonego konta z discordem."
+		#else:
+			#set {link::%player%} to false
+			#send "&9[!] &7Twoje konto zostało odłączone!"
+
+#discord command link [<text>]
+	#prefixes: ?
+	#trigger:
+		#if {kod::%arg 1%} is set:
+			#if {discord::%discord id of event-member%} is set:
+				#reply with "Twoje konto jest już połączone!"
+			#else:
+				#set {discord::%discord id of event-member%} to {code::%arg-1%}
+				#set {discordid::%{kod::%arg 1%}%::%discord id of event-member%} to "%discord id of event-member%"
+				#set {link::%{code::%arg-1%}%} to true
+				#reply with "Twoje konto minecraft: %{code::%arg-1%}% zostało połączone z kontem discord!"
+				#post message "Użytkownik <@@%discord id of event-member%> połączył swoje konto z postacią **%{kod::%arg 1%}%**." to channel with id "953373580912103545"
+				#delete {kod::%arg 1%}
+		#else:
+			#reply with "Kod niepoprawny"
+
+#command /sprawdz [<player>]:
+	#trigger:
+		#if arg 1 is not set:
+			#send "/sprawdz <gracz>"
+		#if arg 1 is set:
+			#send "Discord ID %arg 1% - %{discordid::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
